@@ -1,10 +1,10 @@
 %get user inputs 
-n = input("Enter the number of layers")
+n = input("Enter the number of layers");
 %get parameters of each region 
 %conductivity 
-c =
+c = zeros(n);
 %permitivity 
-e =
+e = zeros(n);
 %permeability
-u =
+u = zeros(n);
 %for loop to get the input data
