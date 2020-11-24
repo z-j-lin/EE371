@@ -4,7 +4,7 @@ N = input("Enter the number of layers");
 %permitivity of free space
 e0= 8.85418782e-12;
 %magnetic permeability of free space 
-u0 = (4*pi)*10^(-7);
+u0 = 4*pi
 %conductivity 
 c = zeros(N);
 %permitivity 
