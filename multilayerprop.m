@@ -54,9 +54,14 @@ for v = 1:N
     
     %calculate characteristic impedance for each region
     n(1,v) = sqrt(u(1,v)/e(1,v));
-    alpha = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))-1);
-    beta = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))+1);
-    propconst(1,v)= alpha + beta*1i;
+    if c(1,v) == 0
+        beta = w*sqrt(u(1,v)*e(1,v));
+        propconst(1,v)= beta*1i;
+    else 
+        alpha = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))-1);
+        beta = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))+1);
+        propconst(1,v)= alpha + beta*1i;
+    end
 end
 z(1,N)= n(1,N);
 z(1,N-1) = z(1,N);
@@ -75,7 +80,7 @@ Er(1,1) = r(1,1)*E(1,1);
 p(1,1) = (0.5*(abs(E(1,1))^2)*(1 - abs(r(1,1))^2))/n(1,1);
 for v = 2:+1:N
    if v<N
-       E(1,v)=(E(1,v-1)*(1+r(1,v-1)))/(exp(propconst(1,v)*d(1,v)*(1+rp(1,v))));
+       E(1,v)=(E(1,v-1)*(1+r(1,v-1)))/(exp(propconst(1,v)*d(1,v))*(1+rp(1,v)));
        Er(1,v)= r(1,v)*E(1,v);
    end
    if v == N

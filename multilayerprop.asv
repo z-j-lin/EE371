@@ -30,13 +30,13 @@ rp(N) = 0;
 r = zeros(1,N);
 dielectric = inputdlg('Enter space-separated values for dielectric constant in each region in order',...
              'Sample', [1 50]);
-e = str2num(dielectric{1}); 
+e = str2double(dielectric{1}); 
 permiability = inputdlg('Enter space-separated values for magnetic permeability in each region in order',...
              'Sample', [1 50]);
-u = str2num(permiability{1});
+u = str2double(permiability{1});
 conductivity = inputdlg('Enter space-separated values for conductivity in each region in order',...
              'Sample', [1 50]);
-c = str2num(conductivity{1});
+c = str2double(conductivity{1});
 %get the magnitude of the incident efield 
 f = input("Enter the frequency of the incident electric field: ");
 E(1,1) = input("Enter the magnitude of the incident electric field: ");
@@ -54,9 +54,13 @@ for v = 1:N
     
     %calculate characteristic impedance for each region
     n(1,v) = sqrt(u(1,v)/e(1,v));
-    alpha = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))-1);
-    beta = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))+1);
-    propconst(1,v)= alpha + beta*1i;
+    if c(1,v) == 0
+        beta = 
+        propconst(1,v)= beta*1i;
+    else 
+        alpha = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))-1);
+        beta = (w*sqrt(u(1,v)*e(1,v))/sqrt(2))*sqrt(sqrt(1+((c(1,v)/w*e(1,v))^2))+1);
+        propconst(1,v)= alpha + beta*1i;
 end
 z(1,N)= n(1,N);
 z(1,N-1) = z(1,N);
@@ -73,10 +77,13 @@ end
 %calculate the outputs 
 Er(1,1) = r(1,1)*E(1,1);
 p(1,1) = (0.5*(abs(E(1,1))^2)*(1 - abs(r(1,1))^2))/n(1,1);
-for v = 2:+1:N-1
-   if  
-   E(1,v)=(E(1,v-1)*(1+r(1,v-1)))/(exp(propconst(1,v)*d(1,v)*(1+rp(1,v))));
-   Er(1,v)= r(1,v)*E(1,v);
+for v = 2:+1:N
+   if v<N
+       E(1,v)=(E(1,v-1)*(1+r(1,v-1)))/(exp(propconst(1,v)*d(1,v))*(1+rp(1,v)));
+       Er(1,v)= r(1,v)*E(1,v);
+   end
+   if v == N
+       E(1,v)=(E(1,v-1)*(1+r(1,v-1)));
+   end
    p(1,v) = (0.5*(abs(E(1,v))^2)*(1 - abs(r(1,v))^2))/n(1,v);
 end 
-E(1,N)=  
